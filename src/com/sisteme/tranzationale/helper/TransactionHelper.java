@@ -23,4 +23,10 @@ public class TransactionHelper {
                 .filter(operation -> operation.getVariable().equals(variable))
                 .collect(Collectors.toList());
     }
+
+    public List<Operation> getAllOperationsFromTransactionForIdentifier(Transaction transaction, String transactionIdentifier) {
+        return transaction.getOperations().stream()
+                .filter(operation -> operation.getTransactionIdentifier().equals(transactionIdentifier))
+                .collect(Collectors.toList());
+    }
 }

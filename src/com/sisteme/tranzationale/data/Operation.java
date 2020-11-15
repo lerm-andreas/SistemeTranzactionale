@@ -3,6 +3,7 @@ package com.sisteme.tranzationale.data;
 public class Operation {
 
     private String variable;
+    private String transactionIdentifier;
     private OperationType type;
 
     public Operation() {
@@ -29,8 +30,20 @@ public class Operation {
         this.type = type;
     }
 
+    public String getTransactionIdentifier() {
+        return transactionIdentifier;
+    }
+
+    public void setTransactionIdentifier(String transactionIdentifier) {
+        this.transactionIdentifier = transactionIdentifier;
+    }
+
     @Override
     public String toString() {
-        return  type + "(" + variable.toUpperCase() + ")";
+        if ((transactionIdentifier != null) && (!transactionIdentifier.equals(""))) {
+            return type + "(" + transactionIdentifier + ", " + variable.toUpperCase() + ")";
+        } else {
+            return type + "(" + variable.toUpperCase() + ")";
+        }
     }
 }

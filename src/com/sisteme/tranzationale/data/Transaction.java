@@ -2,6 +2,7 @@ package com.sisteme.tranzationale.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Transaction {
 
@@ -26,5 +27,13 @@ public class Transaction {
     @Override
     public String toString() {
         return "Transaction{" + operations + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(operations, that.operations);
     }
 }

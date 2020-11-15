@@ -8,17 +8,37 @@ import com.sisteme.tranzationale.helper.TransactionHelper;
 
 import java.util.List;
 
-public class OperationValidator {
+public class TransactionValidator {
 
-    private int nrOfReads;
-    private int nrOfWrites;
+    private final int nrOfReads;
+    private final int nrOfWrites;
 
-    private TransactionHelper transactionHelper;
+    private final TransactionHelper transactionHelper;
 
-    public OperationValidator(int nrOfReads, int nrOfWrites, TransactionHelper transactionHelper) {
+    public TransactionValidator(int nrOfReads, int nrOfWrites, TransactionHelper transactionHelper) {
         this.nrOfReads = nrOfReads;
         this.nrOfWrites = nrOfWrites;
         this.transactionHelper = transactionHelper;
+    }
+
+    public boolean areOperationsInOriginalOrder(List<Transaction> originalTransactionList, Transaction transaction) {
+        //IMPROVEMENT HERE => GET ALL POSSIBLE INDEXES
+        for (int i=0; i<originalTransactionList.size(); i++) {
+            List<Operation> operationsFromTransactionForIdentifier = transactionHelper.getAllOperationsFromTransactionForIdentifier(transaction, String.valueOf(i));
+            //EXTRACT
+            Transaction transaction1 = new Transaction();
+            transaction1.setOperations(operationsFromTransactionForIdentifier);
+            //REPLACE INDEX WITH TRANS IDENTIFIER
+            for (Operation operation : transaction1.getOperations()) {
+                operation.setTransactionIdentifier(String.valueOf(i));
+            }
+
+            if (!originalTransactionList.contains(transaction1)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public boolean isTransactionValid(Transaction transaction) {
@@ -26,7 +46,6 @@ public class OperationValidator {
 
         for (Operation operation : transaction.getOperations()) {
             ValidationResponse validationResponse = isOperationValidForTransaction(operation, newTransaction);
-
             if (ValidationResponse.REJECTED.equals(validationResponse)) {
                 return false;
             }
@@ -65,23 +84,12 @@ public class OperationValidator {
         return nrOfReads;
     }
 
-    public void setNrOfReads(int nrOfReads) {
-        this.nrOfReads = nrOfReads;
-    }
-
     public int getNrOfWrites() {
         return nrOfWrites;
-    }
-
-    public void setNrOfWrites(int nrOfWrites) {
-        this.nrOfWrites = nrOfWrites;
     }
 
     public TransactionHelper getTransactionHelper() {
         return transactionHelper;
     }
 
-    public void setTransactionHelper(TransactionHelper transactionHelper) {
-        this.transactionHelper = transactionHelper;
-    }
 }
